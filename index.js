@@ -3,8 +3,8 @@ const express = require('express');
 const server = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
-
-
+const jwt = require('jsonwebtoken');
+const userRoute = require('./routes/user')
 
 //for connecting with db
 
@@ -19,7 +19,7 @@ async function main() {
 
 server.use(cors());
 server.use(express.json()); //This line adds middleware to parse JSON bodies sent in the HTTP request
-
+server.use('/user',userRoute.userRouter)
 
 
 
