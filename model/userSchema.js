@@ -17,6 +17,19 @@ const userSchema = new Schema({
     },
     password: { type: String, minLength: 6, required: true },
     token: String,
+    image: String,
+    address: { type: String, required: true },
+    workArea: {
+        type: { type: String },
+        areas: {
+            type: [String], required: function () {
+                return this.role === 'employee';
+            }
+        },
+    },
+    mobile: { type: String, required: true },
+    workExperience: { type: String, required: true },
+    details: String,
 })
 
 //the users name should be same as the database clustor name

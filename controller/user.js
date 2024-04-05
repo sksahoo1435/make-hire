@@ -1,32 +1,34 @@
 const users = require('../model/userSchema');
 
-exports.createUser = async (req, res) => {
+// this create user now not required due to i make it in the time of signup
 
-    try {
-        const { name, role, email, password } = req.body;
-        const existedUser = await users.findOne({ email });
+// exports.createUser = async (req, res) => {
 
-        if (existedUser) {
-            return res.status(400).json({ message: 'User with this email already exists' });
-        }
-        const newUser = new users({
-            name,
-            role,
-            email,
-            password
-        })
+//     try {
+//         const { name, role, email, password } = req.body;
+//         const existedUser = await users.findOne({ email });
 
-        // Save the user to the database
-        await newUser.save();
-        res.status(201).json({ message: 'User Created successfully', user: newUser });
+//         if (existedUser) {
+//             return res.status(400).json({ message: 'User with this email already exists' });
+//         }
+//         const newUser = new users({
+//             name,
+//             role,
+//             email,
+//             password
+//         })
 
-    } catch (err) {
-        console.error('Error creating user:', err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+//         // Save the user to the database
+//         await newUser.save();
+//         res.status(201).json({ message: 'User Created successfully', user: newUser });
+
+//     } catch (err) {
+//         console.error('Error creating user:', err);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
 
 
-}
+// }
 
 //http://localhost:8080/user/employee?pageSize=2&page=1
 
@@ -54,8 +56,6 @@ exports.getAllUserEmployee = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-
-
 exports.getAllUserEmployer = async (req, res) => {
 
     try {
@@ -111,7 +111,6 @@ exports.getUserEmployer = async (req, res) => {
     }
 }
 
-
 exports.deleteUser = async (req, res) => {
     try {
         const id = req.params.id;
@@ -134,7 +133,7 @@ exports.updateUser = async (req, res) => {
     try {
         const id = req.params.id
         const doc = await users.findOneAndUpdate({ _id: id }, req.body, { new: true })
-        res.status(202).json({message:'Updated successfully',user:doc});
+        res.status(202).json({ message: 'Updated successfully', user: doc });
     } catch (err) {
         res.status(500).json({ message: 'Internal server error' });
     }

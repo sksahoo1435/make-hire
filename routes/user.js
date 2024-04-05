@@ -4,7 +4,6 @@ const routes = express.Router();
 const userController = require('../controller/user');
 
 routes
-.post('/',userController.createUser)
 .get('/employee',userController.getAllUserEmployee)
 .get('/employer',userController.getAllUserEmployer)
 .get('/employee/:id',userController.getUserEmployee)
