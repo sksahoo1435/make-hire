@@ -34,9 +34,13 @@ server.use(express.urlencoded({ extended: false }));
 //specific middleeire for authentication is there or not
 const authMiddleware = async (req, res, next) => {
     try {
+        const authHeader = req.get('Authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ message: 'Unauthorized: No token provided' });
+        }
         // Check if Authorization header is present
         const token = req.get('Authorization').split('Bearer ')[1];
-        
+
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized: No token provided' });
         }
