@@ -62,8 +62,8 @@ const authMiddleware = async (req, res, next) => {
 
 // Routes
 server.use('/auth', authRoute.authRouter);
-server.use('/user', authMiddleware, userRoute);
-server.use('/useroperation', authMiddleware, userOperationRoute.userOperationRouters)
+server.use('/user', userRoute);
+server.use('/useroperation', userOperationRoute.userOperationRouters)
 
 // Serve static files
 server.use(express.static(path.join(__dirname, 'uploads')));
