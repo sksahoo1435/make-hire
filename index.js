@@ -14,7 +14,7 @@ const userOperationRoute = require('./routes/user_operation')
 main().catch(err => console.log(err));
 
 async function main() {
-    await mongoose.connect(process.env.DB_URL);
+    await mongoose.connect(process.env.DB_URL,{ useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
     console.log("Db connected successfully");
 }
 
