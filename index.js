@@ -24,7 +24,11 @@ server.set("views", path.resolve("./view"));
 
 
 // Middleware
-server.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5173' // Specify the allowed origin
+};
+
+server.use(cors(corsOptions));
 server.use(express.json());
 
 // this middilewere specially used for handle the form data (because it is not a json data)
@@ -84,4 +88,3 @@ const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
-
