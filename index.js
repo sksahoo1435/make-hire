@@ -24,14 +24,7 @@ server.set("views", path.resolve("./view"));
 
 
 // Middleware
-const corsOptions = {
-    origin: 'http://localhost:5173', // Specify the allowed origin
-    methods:['GET','POST','DELETE','PUT'],
-    header:'Access-Control-Allow-Origin:*',
-    Credentials:true,
-};
-
-server.use(cors(corsOptions));
+server.use(cors());
 server.use(express.json());
 
 // this middilewere specially used for handle the form data (because it is not a json data)
