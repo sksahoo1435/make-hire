@@ -138,3 +138,56 @@ exports.updateUser = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+exports.uploadUserImage = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const file = req.file; // Access uploaded file information
+        
+        if (!file) {
+            return res.status(400).json({ message: 'No image uploaded' });
+        }
+
+        // Update user's profile image path in the database
+        const updatedUser = await users.findOneAndUpdate(
+            { _id: id },
+            { image: file.path }, // Assuming 'file.path' contains the path to the uploaded image
+            { new: true }
+        );
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User image updated successfully', user: updatedUser });
+    } catch (error) {
+        console.error('Error updating user image:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+exports.updateProfilePicture = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const file = req.file;
+    
+        if (!file) {
+            return res.status(400).json({ message: 'No image uploaded' });
+        }
+
+        const updatedUser = await users.findOneAndUpdate(
+            { _id: id },
+            { image: file.path },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'Profile picture updated successfully', user: updatedUser });
+    } catch (error) {
+        console.error('Error updating profile picture:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};

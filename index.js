@@ -3,13 +3,14 @@ const express = require('express');
 const server = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 const jwt = require('jsonwebtoken');
-const userRoute = require('./routes/user')
+const userRoute = require('./routes/user');
 const authRoute = require('./routes/Auth')
 const userOperationRoute = require('./routes/user_operation')
 
-//for connecting with db
 
+// Connect to MongoDB
 main().catch(err => console.log(err));
 
 async function main() {
@@ -17,20 +18,66 @@ async function main() {
     console.log("Db connected successfully");
 }
 
-// middilewire for the express project(server)
+// Set view engine and views directory
+server.set("view engine", "ejs");
+server.set("views", path.resolve("./view"));
 
+
+// Middleware
 server.use(cors());
-server.use(express.json()); //This line adds middleware to parse JSON bodies sent in the HTTP request
-server.use('/user',userRoute.userRouter)
-server.use('/auth',authRoute.authRouter)
-server.use('/useroperation',userOperationRoute.userOperationRouters)
+server.use(express.json());
 
+// this middilewere specially used for handle the form data (because it is not a json data)
+server.use(express.urlencoded({ extended: false }));
+
+
+//specific middleeire for authentication is there or not
+const authMiddleware = async (req, res, next) => {
+    try {
+        // Check if Authorization header is present
+        const token = req.get('Authorization').split('Bearer ')[1];
+        
+        if (!token) {
+            return res.status(401).json({ message: 'Unauthorized: No token provided' });
+        }
+
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.SECRET);
+        if (decoded.email) {
+            next()
+        } else {
+            res.sendStatus(401)
+        }
+
+    } catch (error) {
+        console.error('Error in authentication middleware:', error);
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
+
+
+// Routes
+server.use('/auth', authRoute.authRouter);
+server.use('/user', authMiddleware, userRoute);
+server.use('/useroperation', authMiddleware, userOperationRoute.userOperationRouters)
+
+// Serve static files
+server.use(express.static(path.join(__dirname, 'uploads')));
+
+// Error handling middleware
+server.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 server.get('/', (req, res) => {
-    res.send('Hello, World!');
+    return res.render('profilepage');
 });
 
 
-server.listen(process.env.PORT, () => {
-    console.log('server started..')
-})
+// Start server
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+});
+
