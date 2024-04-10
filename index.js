@@ -25,7 +25,9 @@ server.set("views", path.resolve("./view"));
 
 // Middleware
 const corsOptions = {
-    origin: 'http://localhost:5173' // Specify the allowed origin
+    origin: 'http://localhost:5173', // Specify the allowed origin
+    methods:['GET','POST','DELETE','PUT'],
+    Credentials:true,
 };
 
 server.use(cors(corsOptions));
